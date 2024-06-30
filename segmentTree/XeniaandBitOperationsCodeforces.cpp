@@ -31,29 +31,7 @@ using namespace std;
 #define all(x) x.begin(), x.end()
 #define sz(x) (int)(x).size()
 #define N 20000000
-mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-// rng used to shuffle syntax below
-// shuffle(arr , arr+n , rng);
-class Triplet
-{
-public:
-    int x, y, z;
-};
-typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> indexed_set;
-// indexed_set s;
-// s.insert(value);
-// auto p = s.find_by_order(idx);
-// int q = s.order_of_key(value);
 
-const int dx[4] = {0, 0, 1, -1};
-const int dy[4] = {1, -1, 0, 0};
-const int mod = 1e9 + 7;
-// vector <int> adj[N];
-// bool visited[N];
-// vector<bool> is_prime(N+1, true);
-string str;
-map<int, int> freq;
-const double PI = 3.1415926535897;
 
 void IOS()
 {
@@ -66,14 +44,124 @@ void IOS()
 #endif
 }
 
+
+struct segmentTree
+{
+    vi st;
+    int n;
+
+    void init(int n)
+    {
+        this->n = n;
+        st.resize(4 * n, 0);
+    }
+
+    void build(int start, int ending, int node, vi &v)
+    {
+
+        if (start == ending)
+        {
+            st[node] = v[start];
+            return;
+        }
+
+        int mid = (start + ending) / 2;
+
+        // left subtree is (start, mid)
+        build(start, mid, 2 * node + 1, v);
+
+        // right subtree is (mid+1 , ending)
+        build(mid + 1, ending, 2 * node + 2, v);
+
+        // do the operation like sum , min xor etc
+        st[node] = st[2 * node + 1] + st[2 * node + 2];
+    }
+
+    void build(vi &v)
+    {
+        build(0, v.size() - 1, 0, v);
+    }
+
+    int query(int start, int ending, int l, int r, int node)
+    {
+        // non overlapping case
+        if (start > r || ending < l)
+        {
+            return 0;
+        }
+
+        // complete overlapcase
+        if (start >= l && ending <= r)
+        {
+            return st[node];
+        }
+
+        // partial overlap conditions
+        int mid = (start + ending) / 2;
+        int left = query(start, mid, l, r, 2 * node + 1);
+        int right = query(mid + 1, ending, l, r, 2 * node + 2);
+        return left + right;
+    }
+
+    int query(int l, int r)
+    {
+        return query(0, n - 1, l, r, 0);
+    }
+
+    void update(int start, int ending, int node, int index, int value)
+    {
+        // base case -> leaf node
+        if (start == ending)
+        {
+            st[node] = value;
+            return;
+        }
+
+        int mid = (start + ending) / 2;
+        if (index <= mid)
+        {
+            // go to left subtree
+            update(start, mid, 2 * node + 1, index, value);
+        }
+        else
+        {
+            // go to right subtree
+            update(mid + 1, ending, 2 * node + 2, index, value);
+        }
+
+        st[node] = st[2 * node + 1] + st[2 * node + 2];
+    }
+
+    void update(int x, int y)
+    {
+        update(0, n - 1, 0, x, y);
+    }
+};
+
+
 int32_t main()
 {
     IOS();
-    w(t)
-    {
-        int n;
-        cin >> n;
-        cout << "vik";
+    int n,m;
+    cin>>n>>m;
+    vi nums;
+    vector <pii> q;
+    for(int i=0;i<(1<<n);i++){
+        int x;
+        cin>>x;
+        nums.pb(x);
     }
+
+    rep(i,m){
+        int x,y;
+        cin>>x>>y;
+        q.pb({x,y});
+    }
+
+    segmentTree tree;
+    tree.init(nums.size());
+    tree.build(nums);
+
+
     return 0;
 }
