@@ -1,3 +1,4 @@
+// https://codeforces.com/contest/339/problem/D
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 using namespace __gnu_pbds;
@@ -32,7 +33,6 @@ using namespace std;
 #define sz(x) (int)(x).size()
 #define N 20000000
 
-
 void IOS()
 {
     ios_base::sync_with_stdio(0);
@@ -43,7 +43,6 @@ void IOS()
     freopen("output.txt", "w", stdout);
 #endif
 }
-
 
 struct segmentTree
 {
@@ -56,7 +55,7 @@ struct segmentTree
         st.resize(4 * n, 0);
     }
 
-    void build(int start, int ending, int node, vi &v)
+    void build(int start, int ending, int node, vi &v, int op)
     {
 
         if (start == ending)
@@ -68,18 +67,26 @@ struct segmentTree
         int mid = (start + ending) / 2;
 
         // left subtree is (start, mid)
-        build(start, mid, 2 * node + 1, v);
+        build(start, mid, 2 * node + 1, v, 1 - op);
 
         // right subtree is (mid+1 , ending)
-        build(mid + 1, ending, 2 * node + 2, v);
+        build(mid + 1, ending, 2 * node + 2, v, 1 - op);
 
         // do the operation like sum , min xor etc
-        st[node] = st[2 * node + 1] + st[2 * node + 2];
+
+        if (op == 0)
+        {
+            st[node] = st[2 * node + 1] | st[2 * node + 2];
+        }
+        else
+        {
+            st[node] = st[2 * node + 1] ^ st[2 * node + 2];
+        }
     }
 
-    void build(vi &v)
+    void build(vi &v, int op)
     {
-        build(0, v.size() - 1, 0, v);
+        build(0, v.size() - 1, 0, v, op);
     }
 
     int query(int start, int ending, int l, int r, int node)
@@ -108,7 +115,7 @@ struct segmentTree
         return query(0, n - 1, l, r, 0);
     }
 
-    void update(int start, int ending, int node, int index, int value)
+    void update(int start, int ending, int node, int index, int value, int op)
     {
         // base case -> leaf node
         if (start == ending)
@@ -121,47 +128,71 @@ struct segmentTree
         if (index <= mid)
         {
             // go to left subtree
-            update(start, mid, 2 * node + 1, index, value);
+            update(start, mid, 2 * node + 1, index, value, 1 - op);
         }
         else
         {
             // go to right subtree
-            update(mid + 1, ending, 2 * node + 2, index, value);
+            update(mid + 1, ending, 2 * node + 2, index, value, 1 - op);
         }
 
-        st[node] = st[2 * node + 1] + st[2 * node + 2];
+        if (op == 0)
+        {
+            st[node] = st[2 * node + 1] | st[2 * node + 2];
+        }
+        else
+        {
+            st[node] = st[2 * node + 1] ^ st[2 * node + 2];
+        }
     }
 
-    void update(int x, int y)
+    void update(int x, int y, int op)
     {
-        update(0, n - 1, 0, x, y);
+        update(0, n - 1, 0, x, y, op);
     }
 };
-
 
 int32_t main()
 {
     IOS();
-    int n,m;
-    cin>>n>>m;
+    int n, m;
+    cin >> n >> m;
     vi nums;
-    vector <pii> q;
-    for(int i=0;i<(1<<n);i++){
+    vector<pii> q;
+    for (int i = 0; i < (1 << n); i++)
+    {
         int x;
-        cin>>x;
+        cin >> x;
         nums.pb(x);
     }
 
-    rep(i,m){
-        int x,y;
-        cin>>x>>y;
-        q.pb({x,y});
+    rep(i, m)
+    {
+        int x, y;
+        cin >> x >> y;
+        q.pb({x - 1, y});
     }
 
     segmentTree tree;
     tree.init(nums.size());
-    tree.build(nums);
+    int op = 0;
+    if (n & 1)
+    {
+        tree.build(nums, 0);
+    }
+    else
+    {
+        tree.build(nums, 1);
+        op = 1;
+    }
 
+    // cout << tree.query(0, nums.size() - 1) << endl;
+
+    for (pii p : q)
+    {
+        tree.update(p.fi, p.se, op);
+        cout << tree.query(0, nums.size() - 1) << endl;
+    }
 
     return 0;
 }
