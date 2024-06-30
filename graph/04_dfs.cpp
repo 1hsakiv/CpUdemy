@@ -24,35 +24,26 @@ public:
 			l[j].push_back(i);
 		}
 	}
-
-	// bfs can be used to find shortest path from
-	// source is UNDIRECTED GRAPH
-	void bfs(int source)
+	void dfsHelper(int node, bool *visited)
 	{
+		visited[node] = true;
+		cout << node << " ";
 
-		queue<int> q;
-		bool *visited = new bool[V]{0};
-
-		q.push(source);
-		visited[source] = true;
-
-		while (!q.empty())
+		// make a dfs call on all its unvisited neighbours
+		for (int nbr : l[node])
 		{
-			// Do some work for every node
-			int f = q.front();
-			cout << f << endl;
-			q.pop();
-
-			// PUsh the nbrs of current node inside q if they are not already visited
-			for (auto nbr : l[f])
+			if (!visited[nbr])
 			{
-				if (!visited[nbr])
-				{
-					q.push(nbr);
-					visited[nbr] = true;
-				}
+				dfsHelper(nbr, visited);
 			}
 		}
+		return;
+	}
+
+	void dfs(int source)
+	{
+		bool *visited = new bool[V]{0};
+		dfsHelper(source, visited);
 	}
 };
 
@@ -67,6 +58,6 @@ int main()
 	g.addEdge(4, 5);
 	g.addEdge(0, 4);
 	g.addEdge(3, 4);
-	g.bfs(1);
+	g.dfs(1);
 	return 0;
 }
