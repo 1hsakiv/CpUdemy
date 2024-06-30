@@ -46,7 +46,6 @@ typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_
 // int q = s.order_of_key(value);
 
 vector<int> adj[N];
-bool visited[N];
 int depth[N];
 int parent[N];
 
@@ -68,12 +67,11 @@ void IOS()
 
 void dfs(int u, int par)
 {
-    visited[u] = 1;
     parent[u] = par;
     depth[u] = depth[par] + 1;
     for (auto v : adj[u])
     {
-        if (!visited[v])
+        if (v != par)
         {
             dfs(v, u);
         }
@@ -82,6 +80,8 @@ void dfs(int u, int par)
 
 int lca(int u, int v)
 {
+    if (u == v)
+        return u;
     if (depth[u] < depth[v])
     {
         swap(u, v);
@@ -117,7 +117,7 @@ int32_t main()
 
     dfs(1, 0);
 
-    cout << lca(10,12);
+    cout << lca(9, 6);
 
     return 0;
 }
