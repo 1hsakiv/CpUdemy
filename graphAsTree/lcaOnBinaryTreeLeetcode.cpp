@@ -1,12 +1,14 @@
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
- * };
- */
+#include<bits/stdc++.h>
+
+using namespace std;
+
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+    };
+ 
 
 // https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/
 
@@ -52,3 +54,8 @@ public:
         return lca(p,q);
     }
 };
+
+int main(){
+
+    return 0;
+}
