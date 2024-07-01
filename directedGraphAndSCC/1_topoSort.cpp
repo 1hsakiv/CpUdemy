@@ -21,8 +21,8 @@ using namespace std;
 #define sz(x) (int)(x).size()
 #define N 20000000
 const int mod = 1e9 + 7;
-// vector <int> adj[N];
-// bool visited[N];
+vector<int> adj[N];
+bool visited[N];
 
 void IOS()
 {
@@ -35,16 +35,68 @@ void IOS()
 #endif
 }
 
+vi order;
+void dfs(int u)
+{
+    visited[u] = 1;
+    for (auto v : adj[u])
+    {
+        if (visited[v] == 0)
+        {
+            dfs(v);
+        }
+    }
+
+    // this this pushing the top recursive stack to the 
+    // order vector
+    order.pb(u);
+}
+
+
 int32_t main()
 {
     IOS();
     w(t)
     {
-        int n;
-        cin >> n;
-        vi nums(n, 0);
-        rep(i, n) cin >> nums[i];
-        cout << nums[0];
+        int n, m;
+        cin >> n >> m;
+        rep(i, m)
+        {
+            int x, y;
+            cin >> x >> y;
+            adj[x].pb(y);
+        }
+
+        for (int i = 1; i <= n; i++)
+        {
+            if(visited[i] == 0){
+                dfs(i);
+            }
+        }
+
+        reverse(all(order));
+
+        for (int x : order)
+            cout << x << " ";
     }
     return 0;
 }
+
+// for topo sorting graph must be DAG
+// directed acyclic graph
+// if graph contain any cycle this algo will
+// give wrong answer
+// for cycle detection use backedge concept
+
+// Test Case
+
+// 1
+// 5 6
+// 1 5
+// 1 2
+// 2 4
+// 2 5
+// 3 1
+// 3 2
+
+// 3 1 2 4 5 
