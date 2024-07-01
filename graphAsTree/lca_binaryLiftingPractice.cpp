@@ -13,9 +13,9 @@ void dfs(int u, int par)
     depth[u] = depth[par] + 1;
     Parent[u][0] = par;
 
-    for (int j = 1; j <= M - 1; j++)
+    for (int i = 1; i <= M - 1; i++)
     {
-        Parent[u][j] = Parent[Parent[u][j - 1]][j - 1];
+        Parent[u][i] = Parent[Parent[u][i - 1]][i - 1];
     }
 
     for (auto v : adj[u])
@@ -36,6 +36,8 @@ int LCA(int u, int v)
         swap(u, v);
 
     int diff = depth[u] - depth[v];
+
+    // bring u to same level
     for (int j = M - 1; j >= 0; j--)
     {
         if ((diff >> j) & 1)
@@ -44,7 +46,7 @@ int LCA(int u, int v)
         }
     }
 
-    // on the same level
+    // now move both the node upward
     for (int j = M - 1; j >= 0; j--)
     {
         if (Parent[u][j] != Parent[v][j])
@@ -53,7 +55,6 @@ int LCA(int u, int v)
             v = Parent[v][j];
         }
     }
-
     return Parent[u][0];
 }
 
@@ -136,15 +137,15 @@ int main()
 // pathLength
 // 7
 // 4
-// 0 0 0 0 0 
-// 1 0 0 0 0 
-// 1 0 0 0 0 
-// 2 1 0 0 0 
-// 2 1 0 0 0 
-// 2 1 0 0 0 
-// 3 1 0 0 0 
-// 5 2 0 0 0 
-// 8 5 1 0 0 
-// 4 2 0 0 0 
-// 8 5 1 0 0 
-// 7 3 0 0 0 
+// 0 0 0 0 0
+// 1 0 0 0 0
+// 1 0 0 0 0
+// 2 1 0 0 0
+// 2 1 0 0 0
+// 2 1 0 0 0
+// 3 1 0 0 0
+// 5 2 0 0 0
+// 8 5 1 0 0
+// 4 2 0 0 0
+// 8 5 1 0 0
+// 7 3 0 0 0
