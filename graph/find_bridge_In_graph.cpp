@@ -1,4 +1,5 @@
 // https://codeforces.com/contest/1986/problem/F
+// https://www.youtube.com/watch?v=CiDPT1xMKI0&ab_channel=CodeHelp-byBabbar
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -49,7 +50,7 @@ void dfs(int node, int parent = -1)
         }
         else
         {
-            // can be bridge edge
+            //bridge edge
             dfs(nbr, node);
             sz[node] += sz[nbr];
             low[node] = min(low[node], low[nbr]);
