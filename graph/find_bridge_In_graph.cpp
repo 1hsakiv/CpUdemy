@@ -1,5 +1,12 @@
 // https://codeforces.com/contest/1986/problem/F
 // https://www.youtube.com/watch?v=CiDPT1xMKI0&ab_channel=CodeHelp-byBabbar
+
+// bridge is the edge which when removed increases the 
+// no of component of graph
+
+// while articulation point is the vertex in graph 
+// which when removed increases the no of component 
+
 #include <bits/stdc++.h>
 using namespace std;
 
