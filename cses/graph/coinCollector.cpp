@@ -29,6 +29,8 @@ bool visited1[N];
 bool visited2[N];
 bool visited3[N];
 bool visited4[N];
+int inDegree[N];
+int outDegree[N];
 
 void IOS()
 {
@@ -87,20 +89,22 @@ void dfs_on_condensed(int u, vector<vector<int>> &adj_scc)
     condensed_order.pb(u);
 }
 
-void dfs_max_sum(int u, vi &condensed_coin, vector<vi> &adj_scc, int &ans, int currSum)
+void dfs_max_sum(int u, vi &condensed_coin, vector<vi> &adj_scc, int &ans, int currSum,vi &dp)
 {
     visited4[u] = 1;
+    if(dp[u] != -1) ;
     int sum = currSum + condensed_coin[u];
     for (int v : adj_scc[u])
     {
         if (visited4[v] == 0)
         {
-            dfs_max_sum(v, condensed_coin, adj_scc, ans, sum);
+            dfs_max_sum(v, condensed_coin, adj_scc, ans, sum,dp);
         }
     }
     if (adj_scc[u].size() == 0)
     {
         ans = max(ans, sum);
+        dp[u] = ans;
     }
     return;
 }
@@ -120,6 +124,9 @@ int32_t main()
         int x, y;
         cin >> x >> y;
         adj1[x].pb(y);
+        outDegree[x]++;
+        inDegree[y]++;
+
         adj2[y].pb(x);
     }
 
@@ -195,13 +202,15 @@ int32_t main()
         }
     }
     reverse(all(condensed_order));
+
     int ans = 0;
     int currSum = 0;
+    vi dp(n+1 , -1);
     for (int x : condensed_order)
     {
         if (visited4[x] == 0)
         {
-            dfs_max_sum(x, condensed_coin, adj_scc, ans, currSum);
+            dfs_max_sum(x, condensed_coin, adj_scc, ans, currSum,dp);
         }
     }
     cout << ans << endl;

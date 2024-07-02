@@ -1,3 +1,4 @@
+// https://www.spoj.com/problems/MST/
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -23,6 +24,17 @@ using namespace std;
 const int mod = 1e9 + 7;
 // vector <int> adj[N];
 // bool visited[N];
+
+void IOS()
+{
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+}
 
 // call make_function to initilize the dsu
 unordered_map<int, int> father;
@@ -54,32 +66,36 @@ void _union(int a, int b)
 {
     a = _find(a);
     b = _find(b);
-    if (a != b){
+    if (a != b)
         father[b] = a;
-    }
-}
-
-
-void IOS()
-{
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    cout.tie(0);
-#ifndef ONLINE_JUDGE
-    freopen("input.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
-#endif
 }
 
 int32_t main()
 {
     IOS();
-    w(t){
-        int n;
-        cin >> n;
-        vi nums(n, 0);
-        rep(i, n) cin >> nums[i];
-        
+    int n, m;
+    cin >> n >> m;
+    vector<vi> edge;
+    rep(i, m)
+    {
+        int a, b, w;
+        cin >> a >> b >> w;
+        edge.pb({w, a, b});
     }
+    sort(all(edge));
+    make_father(1, n);
+    int mstWeight = 0;
+    rep(i, sz(edge))
+    {
+        int x = edge[i][1];
+        int y = edge[i][2];
+
+        if (_find(x) != _find(y))
+        {
+            mstWeight += edge[i][0];
+            _union(x, y);
+        }
+    }
+    cout << mstWeight << endl;
     return 0;
 }
